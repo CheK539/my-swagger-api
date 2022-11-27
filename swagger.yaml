@@ -1,718 +1,2469 @@
----
-swagger: "2.0"
+openapi: 3.0.1
 info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
-tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
+  title: Meeting.Api
+  description: Сервис для управления встречами
+  version: v1
 paths:
-  /pet/{petId}/uploadImage:
+  /v1/group-meetings:
     post:
       tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
+        - GroupMeeting
+      summary: Создает групповую встречу.
+      requestBody:
+        description: Данные для создание групповой встречи
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/InsertGroupMeeting'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertGroupMeeting'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/InsertGroupMeeting'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/InsertGroupMeeting'
         required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
       responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
-    post:
+        '201':
+          description: Краткая информация о созданной встрече
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GroupMeeting'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeeting'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeeting'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/group-meeting-time-rules:
+    patch:
       tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
+        - GroupMeeting
+      summary: Обновляет правила времени проведения групповой встречи.
+      requestBody:
+        description: Данные для обновления правил времени проведения групповой встречи
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupMeetingTimeRules'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupMeetingTimeRules'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupMeetingTimeRules'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupMeetingTimeRules'
         required: true
-        schema:
-          $ref: "#/definitions/Pet"
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    put:
-      tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
+        '200':
+          description: Обновленные правила времени проведения встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingTimeRules'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingTimeRules'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingTimeRules'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
     get:
       tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - GroupMeeting
+      summary: Возвращает правила времени проведения групповой встречи.
       parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
           schema:
-            type: "array"
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Правила времени проведения встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingTimeRules'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingTimeRules'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingTimeRules'
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/group-meeting-notifications:
+    get:
+      tags:
+        - GroupMeeting
+      summary: Возвращает информацию об уведомлениях для участников групповой встречи.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: participantRoles
+          in: query
+          description: Роли участников, для которых предназначены уведомления
+          schema:
+            type: array
             items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
+              $ref: '#/components/schemas/MeetingParticipantRole'
+        - name: names
+          in: query
+          description: Темы уведомлений
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
+              type: string
+      responses:
+        '200':
+          description: >-
+            Информация об уведомлениях, которые будут отправляться участникам
+            групповой встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingNotifications'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingNotifications'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingNotifications'
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/group-meeting-notifications/{id}:
+    patch:
+      tags:
+        - GroupMeeting
+      summary: Обновляет информацию об уведомлении для участников групповой встречи.
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор уведомления
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Уведомление, которое будет отправляться участникам групповой встречи
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/EditGroupMeetingNotification'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditGroupMeetingNotification'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/EditGroupMeetingNotification'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/EditGroupMeetingNotification'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Информация об уведомление, которое будет отправляться участникам
+            групповой встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingNotification'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingNotification'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GroupMeetingNotification'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/user-meetings:
     get:
       tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Meeting
+      summary: >-
+        Возвращает информацию о встречах и ролях в них для текущего
+        пользователя.
       parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
+        - name: pageNumber
+          in: query
+          description: Номер страницы
           schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          description: Размер страницы
+          schema:
+            type: integer
+            format: int32
+        - name: name
+          in: query
+          description: Название
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Тип
+          schema:
+            $ref: '#/components/schemas/MeetingType'
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        '200':
+          description: Информация о встречах и ролях в них для текущего пользователя
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserMeetings'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMeetings'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserMeetings'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meetings/{id}:
     delete:
       tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Meeting
+      summary: Удаляет встречу.
       parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
-      responses:
-        200:
-          description: "successful operation"
+        - name: id
+          in: path
+          description: Идентификатор встречи
+          required: true
           schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Успешно
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-info:
     get:
       tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Meeting
+      summary: Возвращает основную информацию о встрече.
       parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
           schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Основная информация о встрече
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingInfo'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingInfo'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingInfo'
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+    patch:
+      tags:
+        - Meeting
+      summary: Обновляет основную информация о встрече.
+      requestBody:
+        description: Данные для обновления основной информации о встрече
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingInfo'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingInfo'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingInfo'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingInfo'
+        required: true
+      responses:
+        '200':
+          description: Основная информация о встрече
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingInfo'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingInfo'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingInfo'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/validate-meeting-link-name:
+    post:
+      tags:
+        - Meeting
+      summary: Валидирует название ссылки на встречу.
+      parameters:
+        - name: meetingLinkName
+          in: query
+          description: Название ссылки на встречу
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Результат валидации названия ссылки на встречу
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingLinkNameValidationResult'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingLinkNameValidationResult'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingLinkNameValidationResult'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-periods-for-time-slots:
+    post:
+      tags:
+        - Meeting
+      summary: >-
+        Создает периоды времени для генерации промежутков времени, доступных для
+        записи на встречу.
+      requestBody:
+        description: >-
+          Данные для создания периодов времени для генерации промежутков
+          времени, доступных для записи на встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingPeriodForSlotsGeneration'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingPeriodForSlotsGeneration'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingPeriodForSlotsGeneration'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingPeriodForSlotsGeneration'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Периоды времени для генерации промежутков времени, доступных для
+            записи на встречу
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingPeriodForSlotsGeneration'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPeriodForSlotsGeneration'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPeriodForSlotsGeneration'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-periods-for-time-slots/id:guid:
+    patch:
+      tags:
+        - Meeting
+      summary: >-
+        Обновляет периоды времени для генерации промежутков времени, доступных
+        для записи на встречу.
+      parameters:
+        - name: id
+          in: header
+          description: Идентификатор периода
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: >-
+          Данные для обновления периодов времени для генерации промежутков
+          времени, доступных для записи на встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingPeriodForSlotsGeneration'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingPeriodForSlotsGeneration'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingPeriodForSlotsGeneration'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingPeriodForSlotsGeneration'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Периоды времени для генерации промежутков времени, доступных для
+            записи на встречу
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingPeriodForSlotsGeneration'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPeriodForSlotsGeneration'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPeriodForSlotsGeneration'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
     delete:
       tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - Meeting
+      summary: >-
+        Удаляет периоды времени для генерации промежутков времени, доступных для
+        записи на встречу.
       parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
+        - name: id
+          in: query
+          description: Идентификатор периода
+          schema:
+            type: string
+            format: uuid
       responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
+        '204':
+          description: Успешно
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-registration-form:
     get:
       tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
+        - Meeting
+      summary: >-
+        Возвращает информацию об анкете, которую заполняет приглашенный при
+        записи на встречу.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
           schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Анкета, которую будет заполнять приглашенный на встречу
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistrationForm'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistrationForm'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistrationForm'
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-registration-form-field:
     post:
       tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
+        - Meeting
+      summary: >-
+        Добавляет поле в анкету, которую заполняет приглашенный при записи на
+        встречу.
+      requestBody:
+        description: >-
+          Данные для добавления поля в анкету, которую будет заполнять
+          приглашенный на встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingRegistrationFormField'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingRegistrationFormField'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingRegistrationFormField'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingRegistrationFormField'
         required: true
-        schema:
-          type: "array"
+      responses:
+        '200':
+          description: >-
+            Созданное поле анкеты, которую будет заполнять приглашенный на
+            встречу
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistrationFormField'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistrationFormField'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistrationFormField'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+    delete:
+      tags:
+        - Meeting
+      summary: >-
+        Удаляет поле из анкеты, которую заполняет приглашенный при записи на
+        встречу.
+      requestBody:
+        description: >-
+          Данные для удаления поля из анкеты, которую заполняет приглашенный при
+          записи на встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/DeleteMeetingRegistrationFormField'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteMeetingRegistrationFormField'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DeleteMeetingRegistrationFormField'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DeleteMeetingRegistrationFormField'
+        required: true
+      responses:
+        '204':
+          description: Успешно
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/book-meeting:
+    post:
+      tags:
+        - Meeting
+      summary: >-
+        Забронировать место на встречу. Если бронь не будет подверждена
+        участником, через некоторое время бронь отменится.
+      requestBody:
+        description: >-
+          Данные для обновления анкеты, которую будет заполнять приглашенный на
+          встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/BookMeeting'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookMeeting'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/BookMeeting'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/BookMeeting'
+        required: true
+      responses:
+        '200':
+          description: Результат бронирования встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/BookMeetingResult'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookMeetingResult'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/BookMeetingResult'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/cancel-meeting-booking:
+    post:
+      tags:
+        - Meeting
+      summary: Отменяет бронь места на встречу.
+      requestBody:
+        description: Данные для отмены брони на встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CancelMeetingBooking'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelMeetingBooking'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CancelMeetingBooking'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CancelMeetingBooking'
+        required: true
+      responses:
+        '204':
+          description: Бронь на встречу отменена
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/register-for-meeting:
+    post:
+      tags:
+        - Meeting
+      summary: Записывает пользователя на встречу. Если есть бронь, подтверждает ее.
+      requestBody:
+        description: Данные для записи на встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/RegisterForMeeting'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterForMeeting'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/RegisterForMeeting'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/RegisterForMeeting'
+        required: true
+      responses:
+        '200':
+          description: Информация об успешной записи на встречу
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistration'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistration'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingRegistration'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/cancel-meeting:
+    post:
+      tags:
+        - Meeting
+      summary: Отменяет встречу со стороны участника.
+      requestBody:
+        description: Данные для отмены встречи
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/CancelMeeting'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelMeeting'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CancelMeeting'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CancelMeeting'
+        required: true
+      responses:
+        '204':
+          description: Встреча отменена
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-participants:
+    get:
+      tags:
+        - Meeting
+      summary: Возвращает информацию о составе встречи.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: pageNumber
+          in: query
+          description: Номер страницы
+          schema:
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          description: Количество участников на странице
+          schema:
+            type: integer
+            format: int32
+        - name: name
+          in: query
+          description: ФИО участника встречи
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: Адрес электронной почты участника встречи
+          schema:
+            type: string
+        - name: participantRole
+          in: query
+          description: Роль участника встречи
+          schema:
+            $ref: '#/components/schemas/MeetingParticipantRole'
+        - name: seeCalendar
+          in: query
+          description: Участники, занятость которых учитывается
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Участники встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipants'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipants'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipants'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+    post:
+      tags:
+        - Meeting
+      summary: Добавляет пользователя во встречу.
+      requestBody:
+        description: Данные для добавления пользователя во встречу
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingParticipant'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingParticipant'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingParticipant'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/InsertMeetingParticipant'
+        required: true
+      responses:
+        '200':
+          description: Участник встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipant'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipant'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipant'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-participants/{id}:
+    patch:
+      tags:
+        - Meeting
+      summary: Обновляет данные участника встречи.
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор участника
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Данные для обновления участника встречи
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingParticipant'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingParticipant'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingParticipant'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingParticipant'
+        required: true
+      responses:
+        '200':
+          description: Участник встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipant'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipant'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipant'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-participant/{id}:
+    delete:
+      tags:
+        - Meeting
+      summary: Удаляет участника встречи.
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор участника
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Успешно
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-participants-busyness:
+    get:
+      tags:
+        - Meeting
+      summary: >-
+        Возвращает занятость тех участников встречи, календари которых
+        учитываются в графике проведения встречи, за определенный период
+        времени.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          description: От данного периода времени
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: До данного периода времени
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: >-
+            Информация о занятости участников встречи, календари которых
+            учитываются в графике проведения встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipantsBusyness'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipantsBusyness'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipantsBusyness'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-notifications/{id}:
+    delete:
+      tags:
+        - Meeting
+      summary: Удаляет выбранное уведомление встречи.
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор уведомления встречи
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Успешно
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-schedule-info:
+    get:
+      tags:
+        - Meeting
+      summary: Возвращает информацию о проведении встречи.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: meetingLinkName
+          in: query
+          description: Название ссылки на встречу
+          schema:
+            type: string
+        - name: firstMeetingDatesCount
+          in: query
+          description: >-
+            Количество дат, в которые проводится встреча и которые нужно вернуть
+            в результате
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Информация о проведении встречи
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingScheduleInfo'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingScheduleInfo'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingScheduleInfo'
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-dates:
+    get:
+      tags:
+        - Meeting
+      summary: >-
+        Возвращает информация о датах проведения встречи за определенный период
+        времени.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          description: Начало периода времени
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: Окончание периода времени
+          schema:
+            type: string
+            format: date-time
+        - name: onlyFree
+          in: query
+          description: Только свободные для записи на встречу даты
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: >-
+            Информация о проведении датах проведения встречи за определенный
+            период времени
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingDates'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingDates'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingDates'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-time-slots:
+    get:
+      tags:
+        - Meeting
+      summary: >-
+        Возвращает информация о промежутках времени проведения встречи за 24
+        часа.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          description: Начало периода времени
+          schema:
+            type: string
+            format: date-time
+        - name: onlyFree
+          in: query
+          description: Только свободные для записи на встречу промежутки времени
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Информация о проведении встречи за 24 часа
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingTimeSlots'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingTimeSlots'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingTimeSlots'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/time-slot-meeting-participants:
+    get:
+      tags:
+        - Meeting
+      summary: >-
+        Возвращает информацию об участниках встречи, записанных на данный
+        промежуток времени.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: startTimeSlot
+          in: query
+          description: Начало промежутка времени, в который проводится встреча
+          schema:
+            type: string
+            format: date-time
+        - name: pageNumber
+          in: query
+          description: Номер страницы
+          schema:
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          description: Количество участников встречи на данной странице
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: >-
+            Информация об участниках встречи, записанных на данный промежуток
+            времени
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipantsForTimeSlot'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipantsForTimeSlot'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingParticipantsForTimeSlot'
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/meeting-place-for-time-slot:
+    get:
+      tags:
+        - Meeting
+      summary: >-
+        Возвращает информацию о месте проведения встречи для конкретного
+        промежутка времени.
+      parameters:
+        - name: meetingId
+          in: query
+          description: Идентификатор встречи
+          schema:
+            type: string
+            format: uuid
+        - name: startTimeSlot
+          in: query
+          description: Начало промежутка времени, в который проводится встреча
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Место проведения встречи для конкретного промежутка времени
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MeetingPlaceForTimeSlot'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPlaceForTimeSlot'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPlaceForTimeSlot'
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '404':
+          description: Cущность не найдена
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+  /v1/people-infos:
+    get:
+      tags:
+        - PeopleSearch
+      summary: Совершает поиск информации о пользователях.
+      parameters:
+        - name: name
+          in: query
+          description: ФИО
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: Адрес электронной почты
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Информация о пользователях
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/PeopleInfos'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeopleInfos'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PeopleInfos'
+        '400':
+          description: Ошибка при проверке данных
+        '401':
+          description: Не удалось пройти авторизацию
+        '403':
+          description: Недостаточно прав на выполнение данной операции
+        '500':
+          description: Неожиданная ошибка при выполнении операции
+components:
+  schemas:
+    BatchMeetingParticipant:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        role:
+          $ref: '#/components/schemas/MeetingParticipantRole'
+      additionalProperties: false
+    BatchMeetingParticipants:
+      required:
+        - participants
+      type: object
+      properties:
+        participants:
+          type: array
           items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
+            $ref: '#/components/schemas/BatchMeetingParticipant'
+      additionalProperties: false
+    BookMeeting:
+      type: object
+      properties:
+        meetingId:
+          type: string
+          format: uuid
+        startTimeSlot:
+          type: string
+          format: date-time
+      additionalProperties: false
+    BookMeetingResult:
+      type: object
+      properties:
+        meetingId:
+          type: string
+          format: uuid
+        startTimeSlot:
+          type: string
+          format: date-time
+        bookingId:
+          type: string
+          format: uuid
+          nullable: true
+        resultType:
+          $ref: '#/components/schemas/BookMeetingResultType'
+      additionalProperties: false
+    BookMeetingResultType:
+      enum:
+        - 1
+        - 2
+      type: integer
+      format: int32
+    CancelMeeting:
+      required:
+        - cancellationToken
+      type: object
+      properties:
+        cancellationToken:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    CancelMeetingBooking:
+      type: object
+      properties:
+        bookingId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    DateOnly:
+      type: object
+      properties:
+        year:
+          type: integer
+          format: int32
+        month:
+          type: integer
+          format: int32
+        day:
+          type: integer
+          format: int32
+        dayOfWeek:
+          $ref: '#/components/schemas/DayOfWeek'
+        dayOfYear:
+          type: integer
+          format: int32
+          readOnly: true
+        dayNumber:
+          type: integer
+          format: int32
+          readOnly: true
+      additionalProperties: false
+    DayOfWeek:
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      type: integer
+      format: int32
+    DeleteMeetingRegistrationFormField:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      additionalProperties: false
+    EditGroupMeetingNotification:
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+          nullable: true
+        offsetTimeMeetingInMinutes:
+          type: array
           items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
-definitions:
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+            type: integer
+            format: int32
+          nullable: true
+        text:
+          $ref: '#/components/schemas/Text'
+        for:
+          $ref: '#/components/schemas/GroupMeetingNotificationFor'
+        templateType:
+          $ref: '#/components/schemas/MeetingNotificationTemplateType'
+      additionalProperties: false
+    EditOnlineConference:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/OnlineConferenceType'
+      additionalProperties: false
+    GroupMeeting:
+      required:
+        - info
+        - participants
+        - timeRules
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        info:
+          $ref: '#/components/schemas/MeetingInfo'
+        participants:
+          $ref: '#/components/schemas/MeetingParticipants'
+        timeRules:
+          $ref: '#/components/schemas/GroupMeetingTimeRules'
+        registrationForm:
+          $ref: '#/components/schemas/MeetingRegistrationForm'
+        meetingNotifications:
+          $ref: '#/components/schemas/GroupMeetingNotifications'
+      additionalProperties: false
+    GroupMeetingNotification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+          nullable: true
+        offsetTimeMeetingInMinutes:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        text:
+          $ref: '#/components/schemas/Text'
+        for:
+          $ref: '#/components/schemas/GroupMeetingNotificationFor'
+        templateType:
+          $ref: '#/components/schemas/MeetingNotificationTemplateType'
+      additionalProperties: false
+    GroupMeetingNotificationFor:
+      type: object
+      properties:
+        excludeEmails:
+          type: array
+          items:
+            type: string
+          nullable: true
+        excludeByEmailPatterns:
+          type: array
+          items:
+            type: string
+          nullable: true
+        emails:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    GroupMeetingNotifications:
+      required:
+        - notifications
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupMeetingNotification'
+      additionalProperties: false
+    GroupMeetingRegistrationLimit:
+      type: object
+      properties:
+        maxParticipantsForTimeSlot:
+          type: integer
+          format: int32
+        registrationEndTime:
+          type: string
+          format: date-time
+          nullable: true
+        registrationLimitForSameEmails:
+          $ref: '#/components/schemas/MeetingRegistrationLimitForSameEmails'
+      additionalProperties: false
+    GroupMeetingTimeRules:
+      required:
+        - slotsGeneration
+        - timeZone
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        timeZone:
+          minLength: 1
+          type: string
+        slotsGeneration:
+          $ref: '#/components/schemas/MeetingTimeSlotsGeneration'
+        registrationLimit:
+          $ref: '#/components/schemas/GroupMeetingRegistrationLimit'
+      additionalProperties: false
+    InsertGroupMeeting:
+      required:
+        - info
+        - timeRules
+      type: object
+      properties:
+        info:
+          $ref: '#/components/schemas/InsertMeetingInfo'
+        participants:
+          $ref: '#/components/schemas/BatchMeetingParticipants'
+        timeRules:
+          $ref: '#/components/schemas/InsertGroupMeetingTimeRules'
+        registrationForm:
+          $ref: '#/components/schemas/InsertMeetingRegistrationForm'
+        meetingNotifications:
+          $ref: '#/components/schemas/InsertGroupMeetingNotifications'
+      additionalProperties: false
+    InsertGroupMeetingNotifications:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/EditGroupMeetingNotification'
+          nullable: true
+      additionalProperties: false
+    InsertGroupMeetingTimeRules:
+      required:
+        - slotsGeneration
+        - timeZone
+      type: object
+      properties:
+        timeZone:
+          minLength: 1
+          type: string
+        slotsGeneration:
+          $ref: '#/components/schemas/InsertMeetingTimeSlotsGeneration'
+        registrationLimit:
+          $ref: '#/components/schemas/GroupMeetingRegistrationLimit'
+      additionalProperties: false
+    InsertMeetingInfo:
+      required:
+        - meetingLinkName
+        - name
+        - place
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          type: string
+          nullable: true
+        place:
+          $ref: '#/components/schemas/MeetingPlace'
+        meetingLinkName:
+          minLength: 1
+          type: string
+        canBeCanceled:
+          type: boolean
+      additionalProperties: false
+    InsertMeetingParticipant:
+      required:
+        - email
+      type: object
+      properties:
+        meetingId:
+          type: string
+          format: uuid
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        role:
+          $ref: '#/components/schemas/MeetingParticipantRole'
+      additionalProperties: false
+    InsertMeetingPeriodForSlotsGeneration:
+      required:
+        - days
+        - times
+      type: object
+      properties:
+        from:
+          $ref: '#/components/schemas/DateOnly'
+        to:
+          $ref: '#/components/schemas/DateOnly'
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeekDay'
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeOnly'
+      additionalProperties: false
+    InsertMeetingRegistrationForm:
+      required:
+        - fields
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingRegistrationFormFieldInfo'
+      additionalProperties: false
+    InsertMeetingRegistrationFormField:
+      required:
+        - fieldName
+      type: object
+      properties:
+        fieldName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        type:
+          $ref: '#/components/schemas/MeetingRegistrationFormFieldType'
+        required:
+          type: boolean
+        meetingId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    InsertMeetingTimeSlotsGeneration:
+      required:
+        - periods
+      type: object
+      properties:
+        durationInMinutes:
+          type: integer
+          format: int32
+        stepBeforeMeetingInMinutes:
+          type: integer
+          format: int32
+          nullable: true
+        stepAfterMeetingInMinutes:
+          type: integer
+          format: int32
+          nullable: true
+        meetingFrom:
+          $ref: '#/components/schemas/DateOnly'
+        meetingTo:
+          $ref: '#/components/schemas/DateOnly'
+        periods:
+          type: array
+          items:
+            $ref: '#/components/schemas/InsertMeetingPeriodForSlotsGeneration'
+      additionalProperties: false
+    Location:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          maxLength: 255
+          minLength: 0
+          type: string
+      additionalProperties: false
+    MainMeetingInfo:
+      required:
+        - name
+        - place
+        - registrationLinkName
+      type: object
+      properties:
+        meetingId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/MeetingType'
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          type: string
+          nullable: true
+        place:
+          $ref: '#/components/schemas/MeetingPlace'
+        registrationLinkName:
+          $ref: '#/components/schemas/MeetingRegistrationLinkName'
+        durationInMinutes:
+          type: integer
+          format: int32
+        registrationEndTime:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    MeetingDates:
+      required:
+        - dates
+      type: object
+      properties:
+        dates:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeInterval'
+      additionalProperties: false
+    MeetingInfo:
+      required:
+        - name
+        - place
+        - registrationLinkName
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          type: string
+          nullable: true
+        place:
+          $ref: '#/components/schemas/MeetingPlace'
+        registrationLinkName:
+          $ref: '#/components/schemas/MeetingRegistrationLinkName'
+        canBeCanceled:
+          type: boolean
+      additionalProperties: false
+    MeetingLinkNameValidationResult:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/MeetingLinkNameValidationResultType'
+        escapedLink:
+          type: string
+          nullable: true
+        invalidLinkNameMessage:
+          type: string
+          nullable: true
+      additionalProperties: false
+    MeetingLinkNameValidationResultType:
+      enum:
+        - 1
+        - 2
+      type: integer
+      format: int32
+    MeetingNotificationTemplateType:
+      enum:
+        - 1
+        - 2
+        - 3
+      type: integer
+      format: int32
+    MeetingParticipant:
+      required:
+        - email
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/PeopleName'
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        role:
+          $ref: '#/components/schemas/MeetingParticipantRole'
+        considerCalendar:
+          type: boolean
+      additionalProperties: false
+    MeetingParticipantBusyness:
+      required:
+        - busyTimePeriods
+        - participant
+      type: object
+      properties:
+        participant:
+          $ref: '#/components/schemas/MeetingParticipantInfo'
+        busyTimePeriods:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeInterval'
+      additionalProperties: false
+    MeetingParticipantInfo:
+      required:
+        - email
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/PeopleName'
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+      additionalProperties: false
+    MeetingParticipantRole:
+      enum:
+        - 1
+        - 2
+        - 3
+      type: integer
+      format: int32
+    MeetingParticipants:
+      type: object
+      properties:
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingParticipant'
+          nullable: true
+        totalPages:
+          type: integer
+          format: int32
+      additionalProperties: false
+    MeetingParticipantsBusyness:
+      required:
+        - busyness
+      type: object
+      properties:
+        busyness:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingParticipantBusyness'
+      additionalProperties: false
+    MeetingParticipantsForTimeSlot:
+      required:
+        - participants
+      type: object
+      properties:
+        slot:
+          $ref: '#/components/schemas/MeetingTimeSlot'
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingParticipantInfo'
+        totalPages:
+          type: integer
+          format: int32
+      additionalProperties: false
+    MeetingPeriodForSlotsGeneration:
+      required:
+        - days
+        - times
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        from:
+          $ref: '#/components/schemas/DateOnly'
+        to:
+          $ref: '#/components/schemas/DateOnly'
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeekDay'
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeOnly'
+      additionalProperties: false
+    MeetingPlace:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        onlineConference:
+          $ref: '#/components/schemas/EditOnlineConference'
+      additionalProperties: false
+    MeetingPlaceForTimeSlot:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        onlineConference:
+          $ref: '#/components/schemas/OnlineConference'
+      additionalProperties: false
+    MeetingRegistration:
+      required:
+        - meetingName
+        - participant
+        - place
+        - timeSlot
+      type: object
+      properties:
+        meetingId:
+          type: string
+          format: uuid
+        meetingName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        participant:
+          $ref: '#/components/schemas/MeetingParticipantInfo'
+        place:
+          $ref: '#/components/schemas/MeetingPlaceForTimeSlot'
+        timeSlot:
+          $ref: '#/components/schemas/MeetingTimeSlot'
+      additionalProperties: false
+    MeetingRegistrationForm:
+      required:
+        - fields
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingRegistrationFormField'
+      additionalProperties: false
+    MeetingRegistrationFormAnswers:
+      required:
+        - answers
+      type: object
+      properties:
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingRegistrationFormFieldAnswer'
+      additionalProperties: false
+    MeetingRegistrationFormField:
+      required:
+        - fieldName
+      type: object
+      properties:
+        fieldName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        type:
+          $ref: '#/components/schemas/MeetingRegistrationFormFieldType'
+        required:
+          type: boolean
+        id:
+          type: string
+          format: uuid
+      additionalProperties: false
+    MeetingRegistrationFormFieldAnswer:
+      required:
+        - fieldName
+        - fieldValue
+      type: object
+      properties:
+        fieldName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        fieldValue:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    MeetingRegistrationFormFieldInfo:
+      required:
+        - fieldName
+      type: object
+      properties:
+        fieldName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        type:
+          $ref: '#/components/schemas/MeetingRegistrationFormFieldType'
+        required:
+          type: boolean
+      additionalProperties: false
+    MeetingRegistrationFormFieldType:
+      enum:
+        - 1
+        - 2
+        - 3
+      type: integer
+      format: int32
+    MeetingRegistrationLimitForSameEmails:
+      required:
+        - excludeEmailPatterns
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/MeetingRegistrationLimitForSameEmailsType'
+        excludeEmailPatterns:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    MeetingRegistrationLimitForSameEmailsType:
+      enum:
+        - 1
+        - 2
+      type: integer
+      format: int32
+    MeetingRegistrationLinkName:
+      required:
+        - linkName
+      type: object
+      properties:
+        linkName:
+          minLength: 1
+          type: string
+        isGlobal:
+          type: boolean
+      additionalProperties: false
+    MeetingScheduleInfo:
+      required:
+        - firstDateFreeTime
+        - firstDates
+        - name
+        - place
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          type: string
+          nullable: true
+        place:
+          $ref: '#/components/schemas/MeetingPlace'
+        durationInMinutes:
+          type: integer
+          format: int32
+        fromToDate:
+          $ref: '#/components/schemas/TimeInterval'
+        firstDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeInterval'
+        firstDateFreeTime:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingParticipantsForTimeSlot'
+        maxParticipantsForTimeSlot:
+          type: integer
+          format: int32
+        registrationEndTime:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    MeetingTimeSlot:
+      required:
+        - time
+      type: object
+      properties:
+        time:
+          $ref: '#/components/schemas/TimeInterval'
+        participantsCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    MeetingTimeSlots:
+      required:
+        - slots
+      type: object
+      properties:
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingTimeSlot'
+      additionalProperties: false
+    MeetingTimeSlotsGeneration:
+      required:
+        - periods
+      type: object
+      properties:
+        durationInMinutes:
+          type: integer
+          format: int32
+        stepBeforeMeetingInMinutes:
+          type: integer
+          format: int32
+          nullable: true
+        stepAfterMeetingInMinutes:
+          type: integer
+          format: int32
+          nullable: true
+        meetingFrom:
+          $ref: '#/components/schemas/DateOnly'
+        meetingTo:
+          $ref: '#/components/schemas/DateOnly'
+        periods:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingPeriodForSlotsGeneration'
+      additionalProperties: false
+    MeetingTimeSlotsGenerationSettings:
+      type: object
+      properties:
+        durationInMinutes:
+          type: integer
+          format: int32
+        stepBeforeMeetingInMinutes:
+          type: integer
+          format: int32
+          nullable: true
+        stepAfterMeetingInMinutes:
+          type: integer
+          format: int32
+          nullable: true
+        meetingFrom:
+          $ref: '#/components/schemas/DateOnly'
+        meetingTo:
+          $ref: '#/components/schemas/DateOnly'
+      additionalProperties: false
+    MeetingType:
+      enum:
+        - 1
+        - 2
+      type: integer
+      format: int32
+    OnlineConference:
+      required:
+        - link
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/OnlineConferenceType'
+        link:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    OnlineConferenceType:
+      enum:
+        - 1
+        - 2
+      type: integer
+      format: int32
+    People:
+      required:
+        - email
+        - name
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/PeopleName'
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+      additionalProperties: false
+    PeopleInfos:
+      required:
+        - infos
+      type: object
+      properties:
+        infos:
+          type: array
+          items:
+            $ref: '#/components/schemas/People'
+      additionalProperties: false
+    PeopleName:
+      required:
+        - familyName
+        - givenName
+      type: object
+      properties:
+        givenName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        middleName:
+          maxLength: 255
+          minLength: 0
+          type: string
+          nullable: true
+        familyName:
+          maxLength: 255
+          minLength: 0
+          type: string
+      additionalProperties: false
+    RegisterForMeeting:
+      type: object
+      properties:
+        startTimeSlot:
+          type: string
+          format: date-time
+        registrationFormAnswers:
+          $ref: '#/components/schemas/MeetingRegistrationFormAnswers'
+      additionalProperties: false
+    Text:
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    TimeInterval:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+      additionalProperties: false
+    TimeOnly:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+        second:
+          type: integer
+          format: int32
+          readOnly: true
+        millisecond:
+          type: integer
+          format: int32
+          readOnly: true
+        ticks:
+          type: integer
+          format: int64
+          readOnly: true
+      additionalProperties: false
+    UpdateGroupMeetingTimeRules:
+      required:
+        - timeZone
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        timeZone:
+          minLength: 1
+          type: string
+        registrationLimit:
+          $ref: '#/components/schemas/GroupMeetingRegistrationLimit'
+        timeSlotSettings:
+          $ref: '#/components/schemas/MeetingTimeSlotsGenerationSettings'
+      additionalProperties: false
+    UpdateMeetingInfo:
+      type: object
+      properties:
+        meetingId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        place:
+          $ref: '#/components/schemas/MeetingPlace'
+        registrationLinkName:
+          $ref: '#/components/schemas/MeetingRegistrationLinkName'
+        canBeCanceled:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    UpdateMeetingParticipant:
+      type: object
+      properties:
+        meetingId:
+          type: string
+          format: uuid
+        role:
+          $ref: '#/components/schemas/MeetingParticipantRole'
+        considerCalendar:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    UpdateMeetingPeriodForSlotsGeneration:
+      type: object
+      properties:
+        from:
+          $ref: '#/components/schemas/DateOnly'
+        to:
+          $ref: '#/components/schemas/DateOnly'
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeekDay'
+          nullable: true
+        times:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeOnly'
+          nullable: true
+      additionalProperties: false
+    UserMeeting:
+      required:
+        - info
+      type: object
+      properties:
+        info:
+          $ref: '#/components/schemas/MainMeetingInfo'
+        userRole:
+          $ref: '#/components/schemas/MeetingParticipantRole'
+      additionalProperties: false
+    UserMeetings:
+      required:
+        - meetings
+      type: object
+      properties:
+        meetings:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMeeting'
+        totalPages:
+          type: integer
+          format: int32
+      additionalProperties: false
+    WeekDay:
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+      type: integer
+      format: int32
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: /auth-server/connect/authorize
+          scopes:
+            readAccess: Access read operations
+tags:
+  - name: GroupMeeting
+    description: Управление групповыми встречами
+  - name: Meeting
+    description: Управление встречами
+  - name: PeopleSearch
+    description: Поиск информации о людях для приглашения на встречу
+  - name: GroupMeeting
+    description: Управление групповыми встречами.
+  - name: Meeting
+    description: Управление встречами.
+  - name: PeopleSearch
+    description: Поиск информации о людях для приглашения на встречу.
